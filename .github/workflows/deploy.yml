@@ -1,0 +1,22 @@
+name: Deploy → EasyPanel
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    name: Trigger EasyPanel Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notificar EasyPanel para fazer deploy
+        run: |
+          curl -X POST "${{ secrets.EASYPANEL_DEPLOY_HOOK }}" \
+            --fail \
+            --silent \
+            --show-error
+        # Para configurar:
+        # 1. No EasyPanel → seu app → Settings → Deploy Hook → copie a URL
+        # 2. No GitHub → repo → Settings → Secrets and variables → Actions
+        # 3. Crie um secret chamado EASYPANEL_DEPLOY_HOOK com a URL copiada

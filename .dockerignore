@@ -1,0 +1,11 @@
+node_modules
+public
+.quartz
+.quartz-cache
+.git
+.DS_Store
+*.log
+PROJETO.md
+generate-index.mjs
+docs
+prof

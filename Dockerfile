@@ -4,10 +4,21 @@
 FROM node:22-slim AS builder
 WORKDIR /usr/src/app
 
+# git e ca-certificates são necessários para o "quartz plugin install"
+# clonar os repositórios dos ~43 plugins via HTTPS — a imagem -slim não
+# vem com git, o que fazia todos os clones falharem silenciosamente.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 # Dependências do Node
 COPY package.json package-lock.json* quartz.lock.json ./
 COPY quartz/ ./quartz/
-COPY quartz.config.yaml ./
+# quartz.ts é importado por quartz/build.ts como "../quartz" — sem ele o
+# build falha com "Could not resolve '../quartz'". tsconfig.json define
+# o JSX do Preact (essencial pros componentes .tsx) e os .d.ts trazem
+# os tipos globais usados pelo build.
+COPY quartz.config.yaml quartz.ts tsconfig.json globals.d.ts index.d.ts ./
 RUN npm ci --ignore-scripts
 
 # Instala plugins do Quartz e gera .quartz/plugins/index.ts

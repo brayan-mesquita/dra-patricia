@@ -6,7 +6,7 @@ configuration:
   enablePopovers: true
   analytics: null
   locale: pt-BR
-  baseUrl: localhost:8080
+  baseUrl: wiki.drapatricianogueira.com.br
   ignorePatterns:
     - private
     - templates

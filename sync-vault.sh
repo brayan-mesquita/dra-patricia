@@ -14,10 +14,13 @@ rm -rf "$CONTENT"
 mkdir -p "$CONTENT"
 
 # Copia arquivos .md ignorando pastas e arquivos sensíveis
+# IMPORTANTE: excludes específicos devem vir ANTES do include genérico "*.md",
+# pois o rsync usa a primeira regra de filtro que casar com o caminho —
+# colocar o include("*.md") antes fazia os excludes de GEMINI.md/MEMORY.md/etc
+# nunca serem alcançados.
 rsync -av --progress \
-  --include="*/" \
-  --include="*.md" \
   --exclude="GEMINI.md" \
+  --exclude="CLAUDE.md" \
   --exclude="CONFIG-PATRICIA.md" \
   --exclude="MEMORY.md" \
   --exclude="Concorrentes.md" \
@@ -34,6 +37,8 @@ rsync -av --progress \
   --exclude=".trash/" \
   --exclude=".git/" \
   --exclude="CURSO-MENTORIA/" \
+  --include="*/" \
+  --include="*.md" \
   --exclude="*" \
   "$VAULT/" "$CONTENT/"
 
